@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register a Clan | BCMS</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .application {
+      max-width: 750px;
+      margin: 70px auto;
+      padding: 35px;
+      background: #101c30;
+      border: 1px solid #233651;
+      border-radius: 12px;
+    }
+    .application h1 { margin-bottom: 12px; }
+    .application > p { color: #91a1ba; margin-bottom: 30px; }
+    .field { margin-bottom: 22px; }
+    .field label {
+      display: block;
+      margin-bottom: 9px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .field input, .field textarea, .field select {
+      width: 100%;
+      padding: 14px;
+      background: #080f1e;
+      border: 1px solid #344763;
+      border-radius: 7px;
+      color: white;
+      font: inherit;
+    }
+    .field textarea { min-height: 110px; resize: vertical; }
+    .application button {
+      border: none;
+      cursor: pointer;
+      font: inherit;
+    }
+    .notice {
+      color: #91a1ba;
+      font-size: 12px;
+      margin-top: 18px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<header class="navbar">
+  <a href="index.html" class="logo">BCMS<span>.</span></a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="clans.html">Clans</a>
+    <a href="index.html#council">Council</a>
+  </nav>
+</header>
+
+<main class="application">
+  <p class="eyebrow">JOIN THE ORGANIZATION</p>
+  <h1>Register Your Clan</h1>
+  <p>Submit your clan for review by the BCMS administration.</p>
+
+  <form id="clanApplication">
+    <div class="field">
+      <label for="clanName">Clan Name *</label>
+      <input id="clanName" name="clanName" required>
+    </div>
+
+    <div class="field">
+      <label for="clanTag">Clan Tag *</label>
+      <input id="clanTag" name="clanTag" maxlength="10" required>
+    </div>
+
+    <div class="field">
+      <label for="leader">Clan Leader's Bonk.io Username *</label>
+      <input id="leader" name="leader" required>
+    </div>
+
+    <div class="field">
+      <label for="members">Initial Member Count *</label>
+      <input id="members" name="members" type="number" min="1" required>
+    </div>
+
+    <div class="field">
+      <label for="description">Clan Description *</label>
+      <textarea id="description" name="description" required></textarea>
+    </div>
+
+    <div class="field">
+      <label for="color">Clan Colors</label>
+      <input id="color" name="color" placeholder="Example: Navy and Blue">
+    </div>
+
+    <div class="field">
+      <label for="recruitment">Recruitment Status</label>
+      <select id="recruitment" name="recruitment">
+        <option value="Open">Open</option>
+        <option value="Closed">Closed</option>
+        <option value="Invite Only">Invite Only</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="discord">Discord or Community Link</label>
+      <input id="discord" name="discord" type="url">
+    </div>
+
+    <button type="submit" class="button">Submit Application</button>
+  </form>
+
+  <p class="notice">
+    Applications will require manual approval before appearing
+    in the public clan directory. Submitting this form does not
+    automatically register your clan.
+  </p>
+</main>
+
+<script>
+  document.getElementById("clanApplication").addEventListener("submit", event => {
+    event.preventDefault();
+    alert("The application system is not connected yet. Database integration is coming soon!");
+  });
+</script>
+
+</body>
+</html>
