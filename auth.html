@@ -125,55 +125,68 @@
 </main>
 
 
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
 
 <script>
+// Login and registration tabs
+const loginTab = document.getElementById("loginTab");
+const registerTab = document.getElementById("registerTab");
 const loginForm = document.getElementById("loginForm");
 const registerForm = document.getElementById("registerForm");
+const formTitle = document.getElementById("formTitle");
 
+function showForm(type) {
+  const registering = type === "register";
+
+  loginForm.classList.toggle("hidden", registering);
+  registerForm.classList.toggle("hidden", !registering);
+  loginTab.classList.toggle("active", !registering);
+  registerTab.classList.toggle("active", registering);
+
+  formTitle.textContent = registering ? "Create Account" : "Welcome Back";
+}
+
+loginTab.addEventListener("click", () => showForm("login"));
+registerTab.addEventListener("click", () => showForm("register"));
+
+// Login
 loginForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const inputs = loginForm.querySelectorAll("input");
 
-  const { data, error } = await supabaseClient.auth.signInWithPassword({
+  const { error } = await supabaseClient.auth.signInWithPassword({
     email: inputs[0].value,
     password: inputs[1].value
   });
 
-  if (error) {
-    alert(error.message);
-    return;
-  }
+  if (error) return alert(error.message);
 
-  alert("Welcome back!");
   window.location.href = "index.html";
 });
 
+// Registration
 registerForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const inputs = registerForm.querySelectorAll("input");
 
-  const { data, error } = await supabaseClient.auth.signUp({
+  const { error } = await supabaseClient.auth.signUp({
     email: inputs[1].value,
     password: inputs[2].value,
     options: {
-      data: {
-        username: inputs[0].value
-      }
+      data: { username: inputs[0].value }
     }
   });
 
-  if (error) {
-    alert(error.message);
-    return;
-  }
+  if (error) return alert(error.message);
 
-  alert("Registration successful! Check your email if confirmation is required.");
+  alert("Registration successful! Check your email.");
 });
 </script>
+
 
 </body>
 </html>
