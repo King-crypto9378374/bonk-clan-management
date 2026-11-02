@@ -1,71 +1,50 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Administration | BCMS</title>
+<title>Founder Dashboard | BCMS</title>
 <link rel="stylesheet" href="style.css">
 <style>
-.admin-layout {
-  display: grid;
-  grid-template-columns: 230px 1fr;
-  min-height: 85vh;
-}
-.sidebar {
-  background: #0b1425;
-  padding: 30px 20px;
-  border-right: 1px solid #233651;
-}
-.sidebar h3 { margin-bottom: 25px; }
-.sidebar a {
-  display: block;
-  padding: 13px;
-  margin-bottom: 8px;
-  color: #91a1ba;
-  border-radius: 6px;
-}
-.sidebar a:hover, .sidebar a.active {
-  background: #142e50;
-  color: white;
-}
-.admin-main { padding: 40px; }
-.admin-main h1 { margin-bottom: 10px; }
-.subtitle { color: #91a1ba; margin-bottom: 30px; }
-.admin-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-  margin-bottom: 35px;
-}
-.stat-card, .panel {
-  background: #101c30;
-  border: 1px solid #233651;
-  border-radius: 9px;
-  padding: 22px;
-}
-.stat-card strong {
-  display: block;
-  color: #2583ff;
-  font-size: 28px;
-  margin-top: 12px;
-}
-.panel { margin-bottom: 25px; }
-.panel h2 { margin-bottom: 18px; font-size: 19px; }
-.panel p { color: #91a1ba; font-size: 14px; }
-.admin-warning {
-  background: #172740;
-  border: 1px solid #344763;
-  border-radius: 8px;
-  padding: 16px;
-  color: #91a1ba;
-  line-height: 1.6;
-}
-@media(max-width:750px) {
-  .admin-layout { grid-template-columns: 1fr; }
-  .sidebar { border-right: none; }
-  .admin-stats { grid-template-columns: 1fr; }
-  .admin-main { padding: 25px 18px; }
+.admin-layout{display:grid;grid-template-columns:230px 1fr;min-height:85vh}
+.sidebar{background:#0b1425;padding:30px 20px;border-right:1px solid #233651}
+.sidebar h3{margin-bottom:25px}
+.sidebar a{display:block;padding:13px;margin-bottom:8px;color:#91a1ba;border-radius:6px}
+.sidebar a:hover,.sidebar a.active{background:#142e50;color:white}
+.admin-main{padding:40px;min-width:0}
+.admin-main h1{margin-bottom:10px}
+.subtitle{color:#91a1ba;margin-bottom:25px}
+.admin-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:25px 0 35px}
+.stat-card,.panel{background:#101c30;border:1px solid #233651;border-radius:9px;padding:22px}
+.stat-card strong{display:block;color:#2583ff;font-size:28px;margin-top:12px}
+.panel{margin-bottom:25px;scroll-margin-top:20px}
+.panel h2{margin-bottom:15px;font-size:19px}
+.muted{color:#91a1ba;font-size:14px}
+.status{padding:12px;border-radius:7px;margin:15px 0;background:#172740;color:#b9c9df}
+.status.error{color:#ff9c9c}
+.status.success{color:#8be0ad}
+.staff-form{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+input,select{background:#0b1425;color:white;border:1px solid #344763;border-radius:6px;padding:12px;min-width:180px}
+button{background:#2583ff;color:white;border:0;border-radius:6px;padding:12px 17px;cursor:pointer}
+button:hover{background:#1268d5}
+button.danger{background:#a83242}
+button.secondary{background:#344763}
+button:disabled{opacity:.5;cursor:not-allowed}
+.staff-table{width:100%;border-collapse:collapse;margin-top:15px}
+.staff-table th,.staff-table td{text-align:left;padding:13px 10px;border-bottom:1px solid #233651}
+.staff-table th{color:#91a1ba;font-size:13px}
+.staff-table td{font-size:14px}
+.staff-table select{min-width:125px;padding:8px}
+.staff-table button{padding:8px 11px}
+.table-wrap{overflow-x:auto}
+.hidden{display:none!important}
+@media(max-width:750px){
+ .admin-layout{grid-template-columns:1fr}
+ .sidebar{border-right:none;padding:20px}
+ .sidebar a{display:inline-block;margin:3px}
+ .admin-main{padding:25px 18px}
+ .admin-stats{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -73,12 +52,11 @@
 
 <header class="navbar">
   <a href="index.html" class="logo">BCMS<span>.</span></a>
-  <span>Administration Portal</span>
+  <span>Founder Administration</span>
   <a href="index.html" class="login">View Website</a>
 </header>
 
 <div class="admin-layout">
-
 <aside class="sidebar">
   <h3>ADMINISTRATION</h3>
   <a class="active" href="#overview">Overview</a>
@@ -89,69 +67,301 @@
   <a href="#announcements">Announcements</a>
   <a href="#settings">Platform Settings</a>
   <a href="#logs">Audit Logs</a>
+  <button id="logoutBtn" class="secondary" style="width:100%;margin-top:20px">Log Out</button>
 </aside>
 
 <main class="admin-main" id="overview">
   <p class="eyebrow">ORGANIZATION CONTROL CENTER</p>
   <h1>Founder Dashboard</h1>
-  <p class="subtitle">Manage and oversee the Bonk.io Clan Management System.</p>
+  <p class="subtitle">Manage the Bonk.io Clan Management System.</p>
 
-  <div class="admin-warning">
-    Preview dashboard — authentication and administrative actions
-    will be activated when we connect the database.
+  <div id="status" class="status">Checking your account...</div>
+
+  <div id="dashboard" class="hidden">
+    <div class="admin-stats">
+      <div class="stat-card">Registered Clans<strong id="clanCount">—</strong></div>
+      <div class="stat-card">Pending Applications<strong id="applicationCount">—</strong></div>
+      <div class="stat-card">Organization Staff<strong id="staffCount">—</strong></div>
+    </div>
+
+    <section class="panel" id="applications">
+      <h2>Clan Applications</h2>
+      <p class="muted">Application review will be connected next.</p>
+    </section>
+
+    <section class="panel" id="clans">
+      <h2>Clan Management</h2>
+      <p class="muted">Clan editing and moderation will be connected next.</p>
+    </section>
+
+    <section class="panel" id="staff">
+      <h2>Organization Staff</h2>
+      <p class="muted">Only the Founder can appoint or remove organization staff.</p>
+
+      <div class="staff-form">
+        <input id="staffUsername" placeholder="Enter exact username">
+        <select id="staffRole">
+          <option value="moderator">Moderator</option>
+          <option value="admin">Administrator</option>
+        </select>
+        <button id="appointBtn">Appoint Staff</button>
+      </div>
+
+      <div id="staffMessage" class="status hidden"></div>
+
+      <div class="table-wrap">
+        <table class="staff-table">
+          <thead>
+            <tr><th>Username</th><th>Role</th><th>Joined</th><th>Action</th></tr>
+          </thead>
+          <tbody id="staffRows">
+            <tr><td colspan="4">Loading staff...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" id="council">
+      <h2>Council Management</h2>
+      <p class="muted">Council proposals and voting will be connected next.</p>
+    </section>
+
+    <section class="panel" id="announcements">
+      <h2>Announcements</h2>
+      <p class="muted">Official announcements will be connected next.</p>
+    </section>
+
+    <section class="panel" id="settings">
+      <h2>Platform Settings</h2>
+      <p class="muted">Organization settings will be connected next.</p>
+    </section>
+
+    <section class="panel" id="logs">
+      <h2>Audit Logs</h2>
+      <p class="muted">Administrative activity logs will be connected next.</p>
+    </section>
   </div>
-
-  <div class="admin-stats">
-    <div class="stat-card">
-      Registered Clans
-      <strong>0</strong>
-    </div>
-    <div class="stat-card">
-      Pending Applications
-      <strong>0</strong>
-    </div>
-    <div class="stat-card">
-      Organization Members
-      <strong>0</strong>
-    </div>
-  </div>
-
-  <section class="panel" id="applications">
-    <h2>Clan Applications</h2>
-    <p>Review new applications and approve or reject clans.</p>
-    <p>No application records available yet.</p>
-  </section>
-
-  <section class="panel" id="clans">
-    <h2>Clan Management</h2>
-    <p>Manage registered clans, leaders, membership, and organization standing.</p>
-  </section>
-
-  <section class="panel" id="staff">
-    <h2>Organization Staff</h2>
-    <p>Appoint administrators, moderators, and council representatives.</p>
-  </section>
-
-  <section class="panel" id="council">
-    <h2>Council Management</h2>
-    <p>Manage representatives, proposals, voting periods, and decisions.</p>
-  </section>
-
-  <section class="panel" id="announcements">
-    <h2>Announcements</h2>
-    <p>Publish official organization-wide announcements.</p>
-  </section>
-
-  <section class="panel" id="settings">
-    <h2>Platform Settings</h2>
-    <p>Manage organization information and platform configuration.</p>
-  </section>
-
-  <section class="panel" id="logs">
-    <h2>Audit Logs</h2>
-    <p>Review administrative actions and important organization events.</p>
-  </section>
 </main>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script>
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const statusBox = document.getElementById("status");
+const dashboard = document.getElementById("dashboard");
+const staffRows = document.getElementById("staffRows");
+const staffMessage = document.getElementById("staffMessage");
+
+function showStatus(message, type="") {
+  statusBox.textContent = message;
+  statusBox.className = "status " + type;
+}
+
+function showStaffMessage(message, type="") {
+  staffMessage.textContent = message;
+  staffMessage.className = "status " + type;
+  staffMessage.classList.remove("hidden");
+}
+
+async function startDashboard() {
+  const { data: { session }, error } = await db.auth.getSession();
+
+  if (error || !session) {
+    showStatus("Please log in before accessing administration.", "error");
+    setTimeout(() => location.href = "auth.html", 1500);
+    return;
+  }
+
+  const { data: staff, error: roleError } = await db
+    .from("organization_staff")
+    .select("role")
+    .eq("user_id", session.user.id)
+    .maybeSingle();
+
+  if (roleError || !staff || staff.role !== "founder") {
+    showStatus("Access denied. Founder privileges are required.", "error");
+    return;
+  }
+
+  showStatus("Founder access verified.", "success");
+  dashboard.classList.remove("hidden");
+
+  await Promise.all([
+    loadStaff(),
+    loadCounts()
+  ]);
+}
+
+async function loadCounts() {
+  const [clans, applications, staff] = await Promise.all([
+    db.from("clans").select("id", {count:"exact",head:true}),
+    db.from("clan_applications").select("id", {count:"exact",head:true}).eq("status","pending"),
+    db.from("organization_staff").select("user_id", {count:"exact",head:true})
+  ]);
+
+  document.getElementById("clanCount").textContent =
+    clans.error ? "—" : clans.count ?? 0;
+  document.getElementById("applicationCount").textContent =
+    applications.error ? "—" : applications.count ?? 0;
+  document.getElementById("staffCount").textContent =
+    staff.error ? "—" : staff.count ?? 0;
+}
+
+async function loadStaff() {
+  staffRows.innerHTML = "<tr><td colspan='4'>Loading...</td></tr>";
+
+  const { data, error } = await db
+    .from("organization_staff")
+    .select("user_id, role, created_at, profiles(username)")
+    .order("created_at", {ascending:true});
+
+  if (error) {
+    staffRows.innerHTML = "<tr><td colspan='4'>Could not load staff: " +
+      escapeHTML(error.message) + "</td></tr>";
+    return;
+  }
+
+  if (!data.length) {
+    staffRows.innerHTML = "<tr><td colspan='4'>No staff found.</td></tr>";
+    return;
+  }
+
+  staffRows.innerHTML = data.map(person => {
+    const username = person.profiles?.username || "Unknown";
+    const date = new Date(person.created_at).toLocaleDateString();
+
+    if (person.role === "founder") {
+      return `<tr>
+        <td>${escapeHTML(username)}</td>
+        <td>Founder</td>
+        <td>${date}</td>
+        <td>Protected</td>
+      </tr>`;
+    }
+
+    return `<tr>
+      <td>${escapeHTML(username)}</td>
+      <td>
+        <select onchange="changeRole('${person.user_id}', this.value)">
+          <option value="moderator" ${person.role === "moderator" ? "selected" : ""}>Moderator</option>
+          <option value="admin" ${person.role === "admin" ? "selected" : ""}>Administrator</option>
+        </select>
+      </td>
+      <td>${date}</td>
+      <td><button class="danger" onclick="removeStaff('${person.user_id}')">Remove</button></td>
+    </tr>`;
+  }).join("");
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;",
+    '"':"&quot;", "'":"&#39;"
+  })[char]);
+}
+
+document.getElementById("appointBtn").addEventListener("click", async () => {
+  const username = document.getElementById("staffUsername").value.trim();
+  const role = document.getElementById("staffRole").value;
+  const button = document.getElementById("appointBtn");
+
+  if (!username) {
+    showStaffMessage("Enter a username first.", "error");
+    return;
+  }
+
+  button.disabled = true;
+
+  const { data: profile, error: lookupError } = await db
+    .from("profiles")
+    .select("id, username")
+    .ilike("username", username)
+    .maybeSingle();
+
+  if (lookupError || !profile) {
+    showStaffMessage("Username not found. Check the spelling.", "error");
+    button.disabled = false;
+    return;
+  }
+
+  const { data: existing } = await db
+    .from("organization_staff")
+    .select("role")
+    .eq("user_id", profile.id)
+    .maybeSingle();
+
+  if (existing?.role === "founder") {
+    showStaffMessage("The Founder account cannot be changed.", "error");
+    button.disabled = false;
+    return;
+  }
+
+  const { error } = await db
+    .from("organization_staff")
+    .upsert({user_id:profile.id, role}, {onConflict:"user_id"});
+
+  button.disabled = false;
+
+  if (error) {
+    showStaffMessage("Appointment failed: " + error.message, "error");
+    return;
+  }
+
+  showStaffMessage(profile.username + " is now a " + role + ".", "success");
+  document.getElementById("staffUsername").value = "";
+  await loadStaff();
+  await loadCounts();
+});
+
+async function changeRole(userId, role) {
+  if (!confirm("Change this staff member's role to " + role + "?")) {
+    await loadStaff();
+    return;
+  }
+
+  const { error } = await db
+    .from("organization_staff")
+    .update({role})
+    .eq("user_id", userId)
+    .neq("role", "founder");
+
+  if (error) {
+    showStaffMessage("Role update failed: " + error.message, "error");
+  } else {
+    showStaffMessage("Staff role updated.", "success");
+  }
+
+  await loadStaff();
+}
+
+async function removeStaff(userId) {
+  if (!confirm("Remove this person from organization staff?")) return;
+
+  const { error } = await db
+    .from("organization_staff")
+    .delete()
+    .eq("user_id", userId)
+    .neq("role", "founder");
+
+  if (error) {
+    showStaffMessage("Removal failed: " + error.message, "error");
+  } else {
+    showStaffMessage("Staff member removed.", "success");
+  }
+
+  await loadStaff();
+  await loadCounts();
+}
+
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await db.auth.signOut();
+  location.href = "auth.html";
+});
+
+startDashboard();
+</script>
 </body>
 </html>
+```
