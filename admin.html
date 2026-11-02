@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administration | BCMS</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.admin-layout {
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  min-height: 85vh;
+}
+.sidebar {
+  background: #0b1425;
+  padding: 30px 20px;
+  border-right: 1px solid #233651;
+}
+.sidebar h3 { margin-bottom: 25px; }
+.sidebar a {
+  display: block;
+  padding: 13px;
+  margin-bottom: 8px;
+  color: #91a1ba;
+  border-radius: 6px;
+}
+.sidebar a:hover, .sidebar a.active {
+  background: #142e50;
+  color: white;
+}
+.admin-main { padding: 40px; }
+.admin-main h1 { margin-bottom: 10px; }
+.subtitle { color: #91a1ba; margin-bottom: 30px; }
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 35px;
+}
+.stat-card, .panel {
+  background: #101c30;
+  border: 1px solid #233651;
+  border-radius: 9px;
+  padding: 22px;
+}
+.stat-card strong {
+  display: block;
+  color: #2583ff;
+  font-size: 28px;
+  margin-top: 12px;
+}
+.panel { margin-bottom: 25px; }
+.panel h2 { margin-bottom: 18px; font-size: 19px; }
+.panel p { color: #91a1ba; font-size: 14px; }
+.admin-warning {
+  background: #172740;
+  border: 1px solid #344763;
+  border-radius: 8px;
+  padding: 16px;
+  color: #91a1ba;
+  line-height: 1.6;
+}
+@media(max-width:750px) {
+  .admin-layout { grid-template-columns: 1fr; }
+  .sidebar { border-right: none; }
+  .admin-stats { grid-template-columns: 1fr; }
+  .admin-main { padding: 25px 18px; }
+}
+</style>
+</head>
+<body>
+
+<header class="navbar">
+  <a href="index.html" class="logo">BCMS<span>.</span></a>
+  <span>Administration Portal</span>
+  <a href="index.html" class="login">View Website</a>
+</header>
+
+<div class="admin-layout">
+
+<aside class="sidebar">
+  <h3>ADMINISTRATION</h3>
+  <a class="active" href="#overview">Overview</a>
+  <a href="#applications">Clan Applications</a>
+  <a href="#clans">Clan Management</a>
+  <a href="#staff">Organization Staff</a>
+  <a href="#council">Council Management</a>
+  <a href="#announcements">Announcements</a>
+  <a href="#settings">Platform Settings</a>
+  <a href="#logs">Audit Logs</a>
+</aside>
+
+<main class="admin-main" id="overview">
+  <p class="eyebrow">ORGANIZATION CONTROL CENTER</p>
+  <h1>Founder Dashboard</h1>
+  <p class="subtitle">Manage and oversee the Bonk.io Clan Management System.</p>
+
+  <div class="admin-warning">
+    Preview dashboard — authentication and administrative actions
+    will be activated when we connect the database.
+  </div>
+
+  <div class="admin-stats">
+    <div class="stat-card">
+      Registered Clans
+      <strong>0</strong>
+    </div>
+    <div class="stat-card">
+      Pending Applications
+      <strong>0</strong>
+    </div>
+    <div class="stat-card">
+      Organization Members
+      <strong>0</strong>
+    </div>
+  </div>
+
+  <section class="panel" id="applications">
+    <h2>Clan Applications</h2>
+    <p>Review new applications and approve or reject clans.</p>
+    <p>No application records available yet.</p>
+  </section>
+
+  <section class="panel" id="clans">
+    <h2>Clan Management</h2>
+    <p>Manage registered clans, leaders, membership, and organization standing.</p>
+  </section>
+
+  <section class="panel" id="staff">
+    <h2>Organization Staff</h2>
+    <p>Appoint administrators, moderators, and council representatives.</p>
+  </section>
+
+  <section class="panel" id="council">
+    <h2>Council Management</h2>
+    <p>Manage representatives, proposals, voting periods, and decisions.</p>
+  </section>
+
+  <section class="panel" id="announcements">
+    <h2>Announcements</h2>
+    <p>Publish official organization-wide announcements.</p>
+  </section>
+
+  <section class="panel" id="settings">
+    <h2>Platform Settings</h2>
+    <p>Manage organization information and platform configuration.</p>
+  </section>
+
+  <section class="panel" id="logs">
+    <h2>Audit Logs</h2>
+    <p>Review administrative actions and important organization events.</p>
+  </section>
+</main>
+</div>
+</body>
+</html>
