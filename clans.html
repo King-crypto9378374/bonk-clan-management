@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clan Directory | BCMS</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .directory { padding: 70px 10%; }
+    .directory-header { margin-bottom: 35px; }
+    .directory-header h1 { font-size: 42px; margin-bottom: 12px; }
+    .directory-header p { color: #91a1ba; }
+    .search-box {
+      width: 100%;
+      padding: 16px;
+      margin: 25px 0;
+      background: #101c30;
+      border: 1px solid #344763;
+      border-radius: 8px;
+      color: white;
+      font-size: 15px;
+    }
+    .clan-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .clan-card {
+      background: #101c30;
+      border: 1px solid #233651;
+      border-radius: 10px;
+      padding: 25px;
+    }
+    .clan-card h2 { margin-bottom: 10px; }
+    .clan-card p { color: #91a1ba; font-size: 14px; line-height: 1.6; }
+    .status {
+      display: inline-block;
+      color: #55a2ff;
+      background: #142e50;
+      padding: 6px 10px;
+      border-radius: 5px;
+      font-size: 11px;
+      margin-bottom: 15px;
+    }
+    .clan-card .tag { color: #2583ff; font-weight: 700; }
+  </style>
+</head>
+<body>
+
+<header class="navbar">
+  <a href="index.html" class="logo">BCMS<span>.</span></a>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="clans.html">Clans</a>
+    <a href="index.html#council">Council</a>
+    <a href="index.html#announcements">News</a>
+  </nav>
+  <div class="nav-actions">
+    <a href="#" class="login">Log In</a>
+    <a href="#" class="button">Register Clan</a>
+  </div>
+</header>
+
+<main class="directory">
+  <div class="directory-header">
+    <p class="eyebrow">THE COMMUNITY DIRECTORY</p>
+    <h1>Clan Directory</h1>
+    <p>Discover clans, explore their profiles, and find your community.</p>
+  </div>
+
+  <input
+    type="search"
+    id="clanSearch"
+    class="search-box"
+    placeholder="Search clans by name or tag..."
+  >
+
+  <div class="clan-grid" id="clanGrid">
+    <div class="clan-card">
+      <span class="status">DEMO PROFILE</span>
+      <h2>Example Clan</h2>
+      <p class="tag">[EX]</p>
+      <p>This is a sample profile showing how approved clans will appear.</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="logo">BCMS<span>.</span></div>
+  <p>Bonk.io Clan Management System</p>
+  <p>Built for the community.</p>
+</footer>
+
+<script>
+  const search = document.getElementById("clanSearch");
+  const cards = document.querySelectorAll(".clan-card");
+
+  search.addEventListener("input", () => {
+    const query = search.value.toLowerCase();
+
+    cards.forEach(card => {
+      card.style.display = card.textContent.toLowerCase().includes(query)
+        ? ""
+        : "none";
+    });
+  });
+</script>
+
+</body>
+</html>
