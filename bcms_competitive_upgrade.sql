@@ -3,7 +3,7 @@ alter table public.bcms_leaderboard add column if not exists elo integer not nul
 alter table public.bcms_leaderboard add column if not exists mode_stats jsonb not null default '{}'::jsonb;
 alter table public.bcms_leaderboard add column if not exists matches_played integer not null default 0;
 alter table public.bcms_leaderboard add column if not exists win_percentage numeric(5,2) not null default 0;
-create unique index if not exists bcms_leaderboard_player_name_unique on public.bcms_leaderboard (lower(player_name));
+create unique index if not exists bcms_leaderboard_player_name_unique on public.bcms_leaderboard (player_name);
 
 create table if not exists public.bcms_stat_submissions (
  id uuid primary key default gen_random_uuid(),
