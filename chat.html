@@ -11,14 +11,59 @@ const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY),$=id=>document.
 let user=null,currentChannel=null,channels=[],subscription=null;
 function addChannel(channel){channels.push(channel);const target=$(channel.group);const b=document.createElement("button");b.className="channel-button";b.textContent=channel.label;b.type="button";b.addEventListener("click",()=>openChannel(channel,b));target.appendChild(b);const groupToggle={leaderChannels:"leaderGroup",clanChannels:"clanGroup",staffChannels:"staffGroup"}[channel.group];if(groupToggle)$(groupToggle).hidden=false;}
 function showNotice(message){$("pageNotice").hidden=false;$("pageNotice").textContent=message;$("chatLayout").hidden=true;}
-async function openChannel(channel,button){currentChannel=channel;document.querySelectorAll(".channel-button").forEach(x=>x.classList.remove("active"));if(button)button.classList.add("active");else{const match=[...document.querySelectorAll(".channel-button")].find(x=>x.textContent===channel.label);match?.classList.add("active");}
-$("channelTitle").textContent=channel.label;$("channelDescription").textContent=channel.description;$("messages").innerHTML='<div class="notice">Loading messages…</div>';const filter=channel.type==="clan"?{channel_type:"clan",clan_id:channel.clanId}:{channel_type:channel.type,clan_id:null};let query=db.from("chat_messages").select("id,channel_type,clan_id,sender_id,sender_name,content,created_at").eq("channel_type",filter.channel_type);query=filter.clan_id?query.eq("clan_id",filter.clan_id):query.is("clan_id",null);const {data,error}=await query.order("created_at",{ascending:true}).limit(100);if(error){$("messages").innerHTML='<div class="notice">Could not load messages: '+esc(error.message)+'</div>';return;}renderMessages(data||[]);}
-function appendMessage(m){const box=$("messages");if(box.querySelector(`[data-message-id="${m.id}"]`))return;const empty=box.querySelector(".notice");if(empty)box.innerHTML="";const article=document.createElement("article");article.className="message "+(m.sender_id===user.id?"mine":"");article.dataset.messageId=m.id;article.innerHTML='<div class="message-meta">'+esc(m.sender_name||"Member")+' · '+new Date(m.created_at).toLocaleString()+'</div><div class="message-text">'+esc(m.content)+'</div>';box.appendChild(article);box.scrollTop=box.scrollHeight;}\nfunction renderMessages(rows){$("messages").innerHTML=rows.length?'':'<div class="notice">No messages yet. Start the conversation.</div>';rows.forEach(appendMessage);$("messages").scrollTop=$("messages").scrollHeight;}
-$("messageForm").addEventListener("submit",async e=>{e.preventDefault();const content=$("messageInput").value.trim();if(!content||!currentChannel)return;$("sendButton").disabled=true;const senderName=user.user_metadata?.display_name||user.user_metadata?.full_name||user.user_metadata?.username||user.email?.split("@")[0]||"Member";const row={channel_type:currentChannel.type,clan_id:currentChannel.clanId||null,sender_id:user.id,sender_name:senderName,content};const {data,error}=await db.from("chat_messages").insert(row).select("id,channel_type,clan_id,sender_id,sender_name,content,created_at").single();$("sendButton").disabled=false;if(error){$("pageNotice").hidden=false;$("pageNotice").textContent="Message not sent: "+error.message;return;}appendMessage(data);$("messageInput").value="";$("pageNotice").hidden=true;});
-(async()=>{try{const {data:{session},error:sessionError}=await db.auth.getSession();if(sessionError)throw sessionError;if(!session){showNotice("Please log in to use BCMS Live Chat. ");$("pageNotice").innerHTML='Please <a href="auth.html">log in</a> to use BCMS Live Chat.';return;}user=session.user;$("pageNotice").hidden=true;$("chatLayout").hidden=false;addChannel({type:"community",clanId:null,label:"Community Chat",description:"A shared room for all registered BCMS members.",group:"publicChannels"});
-const {data:members}=await db.from("clan_members").select("clan_id,role").eq("user_id",user.id);const memberRows=members||[];const leaderIds=memberRows.filter(x=>x.role==="leader").map(x=>x.clan_id);if(leaderIds.length)addChannel({type:"leaders",clanId:null,label:"Clan Leaders",description:"A private room for approved clan leaders.",group:"leaderChannels"});
-const clanIds=[...new Set(memberRows.map(x=>x.clan_id))];if(clanIds.length){const {data:myClans}=await db.from("clans").select("id,name,tag,status").in("id",clanIds).eq("status","approved");(myClans||[]).forEach(c=>addChannel({type:"clan",clanId:c.id,label:c.name+" ["+c.tag+"]",description:"Private chat for members of "+c.name+".",group:"clanChannels"}));}
-const {data:staff}=await db.from("organization_staff").select("role").eq("user_id",user.id).maybeSingle();if(staff)addChannel({type:"staff",clanId:null,label:"Staff Chat",description:"Private organization chat for moderators, administrators, and the founder.",group:"staffChannels"});
-await openChannel(channels[0]);subscription=db.channel("bcms-live-chat").on("postgres_changes",{event:"INSERT",schema:"public",table:"chat_messages"},payload=>{const m=payload.new;if(!currentChannel||m.channel_type!==currentChannel.type||(m.clan_id||null)!==(currentChannel.clanId||null))return;appendMessage(m);}).subscribe();
+function activeFilter(channel){return channel.type==="clan"?"clan_id=eq."+channel.clanId:"clan_id=is.null";}
+async function openChannel(channel,button){
+ currentChannel=channel;
+ document.querySelectorAll(".channel-button").forEach(x=>x.classList.remove("active"));
+ if(button)button.classList.add("active");else{const match=[...document.querySelectorAll(".channel-button")].find(x=>x.textContent===channel.label);match?.classList.add("active");}
+ $("channelTitle").textContent=channel.label;$("channelDescription").textContent=channel.description;$("messages").innerHTML='<div class="notice">Loading messages…</div>';
+ let query=db.from("chat_messages").select("id,channel_type,clan_id,sender_id,sender_name,content,created_at").eq("channel_type",channel.type);
+ query=channel.clanId?query.eq("clan_id",channel.clanId):query.is("clan_id",null);
+ const {data,error}=await query.order("created_at",{ascending:true}).limit(100);
+ if(error){$("messages").innerHTML='<div class="notice">Could not load messages: '+esc(error.message)+'. Check the chat database setup.</div>';return;}
+ renderMessages(data||[]);
+}
+function appendMessage(m){
+ const box=$("messages");if(box.querySelector('[data-message-id="'+CSS.escape(String(m.id))+'"]'))return;
+ const empty=box.querySelector(".notice");if(empty)box.innerHTML="";
+ const article=document.createElement("article");article.className="message "+(m.sender_id===user.id?"mine":"");article.dataset.messageId=m.id;
+ article.innerHTML='<div class="message-meta">'+esc(m.sender_name||"Member")+' · '+new Date(m.created_at).toLocaleString()+'</div><div class="message-text">'+esc(m.content)+'</div>';
+ box.appendChild(article);box.scrollTop=box.scrollHeight;
+}
+function renderMessages(rows){$("messages").innerHTML=rows.length?'':'<div class="notice">No messages yet. Start the conversation.</div>';rows.forEach(appendMessage);$("messages").scrollTop=$("messages").scrollHeight;}
+$("messageForm").addEventListener("submit",async e=>{
+ e.preventDefault();const content=$("messageInput").value.trim();if(!content||!currentChannel)return;
+ $("sendButton").disabled=true;
+ const senderName=user.user_metadata?.display_name||user.user_metadata?.full_name||user.user_metadata?.username||user.email?.split("@")[0]||"Member";
+ const row={channel_type:currentChannel.type,clan_id:currentChannel.clanId||null,sender_id:user.id,sender_name:senderName,content};
+ const {data,error}=await db.from("chat_messages").insert(row).select("id,channel_type,clan_id,sender_id,sender_name,content,created_at").single();
+ $("sendButton").disabled=false;
+ if(error){$("pageNotice").hidden=false;$("pageNotice").textContent="Message not sent: "+error.message;return;}
+ appendMessage(data);$("messageInput").value="";$("pageNotice").hidden=true;
+});
+(async()=>{
+ try{
+  const {data:{session},error:sessionError}=await db.auth.getSession();if(sessionError)throw sessionError;
+  if(!session){showNotice("Please log in to use BCMS Live Chat.");$("pageNotice").innerHTML='Please <a href="account.html">log in</a> to use BCMS Live Chat.';return;}
+  user=session.user;$("pageNotice").hidden=true;$("chatLayout").hidden=false;
+  addChannel({type:"community",clanId:null,label:"Community Chat",description:"A shared room for all registered BCMS members.",group:"publicChannels"});
+  const {data:members,error:memberError}=await db.from("clan_members").select("clan_id,role").eq("user_id",user.id);
+  if(memberError)throw new Error("Could not check clan membership: "+memberError.message);
+  const memberRows=members||[],leaderIds=memberRows.filter(x=>x.role==="leader").map(x=>x.clan_id);
+  if(leaderIds.length)addChannel({type:"leaders",clanId:null,label:"Clan Leaders",description:"A private room for approved clan leaders.",group:"leaderChannels"});
+  const {data:owned,error:ownedError}=await db.from("clans").select("id,name,tag,status").eq("leader_id",user.id).eq("status","approved");
+  if(ownedError)throw new Error("Could not check your clans: "+ownedError.message);
+  const clanMap=new Map();(owned||[]).forEach(c=>clanMap.set(c.id,c));
+  const clanIds=[...new Set(memberRows.map(x=>x.clan_id))];
+  if(clanIds.length){const {data:myClans,error:clanError}=await db.from("clans").select("id,name,tag,status").in("id",clanIds).eq("status","approved");if(clanError)throw new Error("Could not load your clan rooms: "+clanError.message);(myClans||[]).forEach(c=>clanMap.set(c.id,c));}
+  clanMap.forEach(c=>addChannel({type:"clan",clanId:c.id,label:c.name+" ["+c.tag+"]",description:"Private chat for members of "+c.name+".",group:"clanChannels"}));
+  const {data:staff,error:staffError}=await db.from("organization_staff").select("role").eq("user_id",user.id).maybeSingle();
+  if(staffError)throw new Error("Could not check staff access: "+staffError.message);
+  if(staff)addChannel({type:"staff",clanId:null,label:"Staff Chat",description:"Private organization chat for moderators, administrators, and the founder.",group:"staffChannels"});
+  await openChannel(channels[0]);
+  subscription=db.channel("bcms-live-chat").on("postgres_changes",{event:"INSERT",schema:"public",table:"chat_messages"},payload=>{
+   const m=payload.new;if(!currentChannel||m.channel_type!==currentChannel.type||(m.clan_id||null)!==(currentChannel.clanId||null))return;appendMessage(m);
+  }).subscribe(status=>{if(status==="CHANNEL_ERROR"||status==="TIMED_OUT"){$("pageNotice").hidden=false;$("pageNotice").textContent="Live updates are unavailable. Refresh the page; messages can still be reloaded."; }});
+ }catch(error){console.error("BCMS chat startup:",error);showNotice("Chat could not start: "+(error?.message||String(error)));}
 })();
 </script></body></html>
