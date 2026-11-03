@@ -9,7 +9,7 @@
 </style></head>
 <body>
 <header class="navbar"><a class="logo" href="index.html">BCMS<span>.</span></a>
-<nav><a href="#clans">Clans</a><a href="#council">Council</a><a href="#announcements">News</a></nav>
+<nav><a href="clans.html">Clans</a><a href="council.html">Council</a><a href="#announcements">News</a></nav>
 <div class="nav-actions"><a id="accountLink" class="login" href="auth.html">Log In</a><a class="button" href="apply.html">Register Clan</a></div></header>
 <main>
 <section class="hero" id="home"><p class="eyebrow">THE BONK.IO COMMUNITY</p><h1>ONE COMMUNITY.<br><span>COUNTLESS CLANS.</span></h1>
@@ -27,20 +27,20 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 async function loadHome(){
  const [clans,members,proposals,news,session]=await Promise.all([
  db.from("clans").select("id,name,tag,description,colors,recruitment_status").eq("status","approved").order("created_at",{ascending:false}).limit(3),
- db.from("profiles").select("id",{count:"exact",head:true}),
+ db.rpc("get_bcms_public_stats"),
  db.from("council_proposals").select("id",{count:"exact",head:true}),
  db.from("announcements").select("id",{count:"exact",head:true}),
  db.auth.getSession()
  ]);
- document.getElementById("clanCount").textContent=clans.error?"—":clans.data.length;
- document.getElementById("memberCount").textContent=members.error?"—":(members.count??0);
- document.getElementById("proposalCount").textContent=proposals.error?"—":(proposals.count??0);
- document.getElementById("announcementCount").textContent=news.error?"—":(news.count??0);
+ document.getElementById("clanCount").textContent=clans.error?"—":(members.data?.approved_clans??clans.data.length);
+ document.getElementById("memberCount").textContent=members.error?"—":(members.data?.members??0);
+ document.getElementById("proposalCount").textContent=members.error?"—":(members.data?.proposals??0);
+ document.getElementById("announcementCount").textContent=members.error?"—":(members.data?.announcements??0);
  document.getElementById("featuredClans").innerHTML=clans.error?'<p>Clan directory is temporarily unavailable.</p>':clans.data.length?clans.data.map(c=>'<div class="council-item"><span class="pill">'+esc(c.recruitment_status||"Community")+'</span><h3>'+esc(c.name)+' <span style="color:#2583ff">['+esc(c.tag)+']</span></h3><p>'+esc(c.description||"No description provided.")+'</p></div>').join(""):'<p>No approved clans yet. Be the first to apply.</p>';
  const [p,n]=await Promise.all([db.from("council_proposals").select("id,title,description,status,created_at").order("created_at",{ascending:false}).limit(4),db.from("announcements").select("id,title,content,created_at").order("created_at",{ascending:false}).limit(4)]);
  document.getElementById("proposalList").innerHTML=p.error?'<div class="empty-card">Council updates unavailable.</div>':p.data.length?p.data.map(x=>'<article class="council-item"><span class="pill">'+esc(x.status)+'</span><h3>'+esc(x.title)+'</h3><p>'+esc(x.description)+'</p></article>').join(""):'<div class="empty-card">No proposals have been published.</div>';
  document.getElementById("newsList").innerHTML=n.error?'<div class="empty-card">Announcements unavailable.</div>':n.data.length?n.data.map(x=>'<article class="notice-item"><h3>'+esc(x.title)+'</h3><p>'+esc(x.content)+'</p></article>').join(""):'<div class="empty-card">No announcements yet.</div>';
- if(session.data.session){document.getElementById("accountLink").textContent="My Account / Log Out";document.getElementById("accountLink").href="auth.html";const {data:staff}=await db.from("organization_staff").select("role").eq("user_id",session.data.session.user.id).maybeSingle();if(staff)document.getElementById("adminLink").hidden=false;}
+ if(session.data.session){document.getElementById("accountLink").textContent="My Account";document.getElementById("accountLink").href="account.html";const {data:staff}=await db.from("organization_staff").select("role").eq("user_id",session.data.session.user.id).maybeSingle();if(staff)document.getElementById("adminLink").hidden=false;}
 }
 loadHome();
 </script></body></html>
