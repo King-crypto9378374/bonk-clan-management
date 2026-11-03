@@ -6,6 +6,19 @@
 <style>
 .notice-list{display:grid;gap:14px;margin-top:25px}.notice-item,.council-item{background:#101c30;border:1px solid #233651;border-radius:10px;padding:22px}.notice-item p,.council-item p{color:#91a1ba;line-height:1.6;margin-top:8px}.community-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px}.pill{display:inline-block;padding:5px 9px;border-radius:20px;background:#142e50;color:#8fc2ff;font-size:11px;margin-bottom:10px}
 @media(max-width:650px){.navbar{gap:14px}.nav-actions{width:100%;justify-content:flex-start}.hero h1{letter-spacing:-1.5px}}
+
+.welcome-grid,.founder-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:22px}
+.welcome-card,.founder-card,.memorial-card{background:#101c30;border:1px solid #233651;border-radius:12px;padding:22px}
+.welcome-card p,.founder-card p,.memorial-card p{color:#91a1ba;line-height:1.7;margin-top:9px}
+.founder-name{font-size:22px;font-weight:800;color:#f3c96b}
+.memorial-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(240px,.8fr);gap:20px;align-items:start;margin-top:22px}
+.memorial-upload{border:1px dashed #49617f;border-radius:12px;padding:18px;background:#0c1728}
+.memorial-upload input{display:block;width:100%;margin:14px 0;color:#91a1ba}
+.memorial-preview{width:100%;max-height:520px;object-fit:contain;border-radius:8px;margin-top:14px;background:#09111e}
+.memorial-timeline{display:grid;gap:12px;margin-top:18px}
+.memorial-step{border-left:2px solid #b8913c;padding:2px 0 3px 15px}
+.memorial-step p{margin-top:5px;color:#91a1ba;line-height:1.6}
+@media(max-width:700px){.memorial-layout{grid-template-columns:1fr}}
 </style></head>
 <body>
 <header class="navbar"><a class="logo" href="index.html">BCMS<span>.</span></a>
@@ -16,10 +29,56 @@
 <p class="hero-text">The central hub for Bonk.io clans. Discover communities, register your clan, connect with leaders, and help shape the future of the scene.</p>
 <div class="hero-actions"><a href="clans.html" class="button">Explore Clans</a><a href="apply.html" class="button secondary">Register Your Clan</a></div>
 <div class="community-actions"><a id="adminLink" class="login" href="admin.html" hidden>Open administration →</a></div></section>
+
+<section class="content-section" id="welcome">
+<p class="eyebrow">WELCOME TO BCMS</p><h2>A place for every Bonk.io clan</h2>
+<p>Whether you're part of an established clan, building a new one, or simply interested in the community, you're welcome here. BCMS brings clan discovery, communication, diplomacy, competition, and player rankings together in one place.</p>
+<div class="welcome-grid">
+<article class="welcome-card"><span class="pill">01 · EXPLORE</span><h3>Find your community</h3><p>Visit the Clans directory to discover clans, read their profiles, and learn where to connect.</p></article>
+<article class="welcome-card"><span class="pill">02 · JOIN IN</span><h3>Register a clan</h3><p>Clan leaders can submit an application with their clan details, description, and links for review.</p></article>
+<article class="welcome-card"><span class="pill">03 · CONNECT</span><h3>Meet the community</h3><p>Use Live Chat and Diplomacy to communicate, build alliances, and connect with other clan leaders.</p></article>
+<article class="welcome-card"><span class="pill">04 · COMPETE</span><h3>Take part</h3><p>Follow clan wars and explore the player leaderboard to keep up with competitive activity.</p></article>
+</div>
+<p style="margin-top:20px"><a class="button" href="clans.html">Start Exploring</a> <a class="button secondary" href="apply.html">Register a Clan</a></p>
+</section>
 <section class="stats"><div><strong id="clanCount">—</strong><span>Approved Clans</span></div><div><strong id="memberCount">—</strong><span>Registered Members</span></div><div><strong id="proposalCount">—</strong><span>Council Proposals</span></div><div><strong id="announcementCount">—</strong><span>Announcements</span></div></section>
 <section class="content-section" id="clans"><p class="eyebrow">COMMUNITY DIRECTORY</p><h2>Explore the Clans</h2><p>Discover approved clans and find your place in the community.</p><div class="empty-card" id="featuredClans">Loading approved clans…</div><p style="margin-top:20px"><a class="button" href="clans.html">View Clan Directory</a></p></section>
 <section class="content-section" id="council"><p class="eyebrow">COMMUNITY GOVERNANCE</p><h2>The Clan Council</h2><p>View proposals from the organization and follow community decisions.</p><div class="notice-list" id="proposalList"><div class="empty-card">Loading council proposals…</div></div></section>
 <section class="content-section" id="announcements"><p class="eyebrow">LATEST UPDATES</p><h2>Announcements</h2><div class="notice-list" id="newsList"><div class="empty-card">Loading announcements…</div></div></section>
+
+<section class="content-section" id="founders">
+<p class="eyebrow">THE PEOPLE BEHIND BCMS</p><h2>Founders</h2>
+<p>BCMS was created by Vanta and Spaxx with a shared goal: help bring the Bonk.io clan community back together.</p>
+<div class="founder-grid">
+<article class="founder-card"><span class="pill">FOUNDER</span><div class="founder-name">Vanta</div><p>Co-founder of BCMS, helping build a central place for clans to reconnect, organize, and compete.</p></article>
+<article class="founder-card"><span class="pill">FOUNDER</span><div class="founder-name">Spaxx</div><p>Co-founder of BCMS, working toward a stronger and more connected future for the Bonk.io clan scene.</p></article>
+</div>
+<p style="margin-top:18px">Over time, the Bonk.io clan scene lost much of the activity and connection that once brought players together. Clans became less active, communities faded, and it became harder to find one place to organize. We created BCMS to help rebuild those connections—not by trying to recreate the past, but by giving the community tools to create its next chapter.</p>
+</section>
+<section class="content-section" id="kingdomlegend">
+<p class="eyebrow">IN MEMORY OF KINGDOMLEGEND</p><h2>A legacy behind the project</h2>
+<div class="memorial-layout">
+<div class="memorial-card">
+<p><strong>KingdomLegend</strong> was more than a Bonk.io name. He was a player who worked his way forward through persistence, learned from others, and eventually dreamed of changing the clan community for the better.</p>
+<div class="memorial-timeline">
+<div class="memorial-step"><h3>The beginning</h3><p>His journey did not begin at the top. He started out struggling with the game and was nearly not accepted by some of the top players. He kept going and continued working to improve.</p></div>
+<div class="memorial-step"><h3>Learning from Hyperion</h3><p>After meeting Hyperion, he received guidance that helped him develop his skills and master more of what the game demanded.</p></div>
+<div class="memorial-step"><h3>Retirement—and a bigger idea</h3><p>Even after stepping away from competitive play, his connection to the community remained. He wanted to create something that could change Bonk.io and bring its clan scene together again.</p></div>
+<div class="memorial-step"><h3>The discovery of BCMS</h3><p>The day after his passing, his brother found this idea among the folders on his drive. This project is being carried forward in memory of KingdomLegend and the vision he left behind.</p></div>
+</div>
+<p style="margin-top:18px">Special thanks to <strong>Kuno, Tidaly, Hello4409, El_guero</strong>, and especially <strong>JC</strong>—his number one best friend. Thank you for being part of his story and his journey.</p>
+</div>
+<aside class="memorial-upload">
+<h3>KingdomLegend's Bonk-style obituary</h3>
+<p>We want to preserve his obituary here as part of this memorial.</p>
+<label for="memorialImage">Upload obituary image</label>
+<input id="memorialImage" type="file" accept="image/*">
+<button class="button" id="uploadMemorial" type="button">Upload Image</button>
+<p id="memorialUploadStatus" aria-live="polite">Choose an image to add it to the memorial.</p>
+<div id="memorialImageDisplay"></div>
+</aside>
+</div>
+</section>
 </main><footer><div class="logo">BCMS<span>.</span></div><p>Bonk.io Clan Management System</p><p>Independent community platform; not affiliated with Bonk.io.</p></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase.js"></script><script>
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
@@ -42,5 +101,24 @@ async function loadHome(){
  document.getElementById("newsList").innerHTML=n.error?'<div class="empty-card">Announcements unavailable.</div>':n.data.length?n.data.map(x=>'<article class="notice-item"><h3>'+esc(x.title)+'</h3><p>'+esc(x.content)+'</p></article>').join(""):'<div class="empty-card">No announcements yet.</div>';
  if(session.data.session){document.getElementById("accountLink").textContent="My Account";document.getElementById("accountLink").href="account.html";const {data:staff}=await db.from("organization_staff").select("role").eq("user_id",session.data.session.user.id).maybeSingle();if(staff)document.getElementById("adminLink").hidden=false;}
 }
+
+document.getElementById("uploadMemorial").addEventListener("click",async()=>{
+ const input=document.getElementById("memorialImage"),status=document.getElementById("memorialUploadStatus"),display=document.getElementById("memorialImageDisplay");
+ const file=input.files?.[0];
+ if(!file){status.textContent="Please choose an image first.";return;}
+ if(!file.type.startsWith("image/")){status.textContent="Please choose an image file.";return;}
+ if(file.size>10*1024*1024){status.textContent="Please choose an image smaller than 10 MB.";return;}
+ const {data:{session}}=await db.auth.getSession();
+ if(!session){status.textContent="Please log in before uploading the obituary image.";return;}
+ status.textContent="Uploading image…";
+ const ext=(file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"")||"jpg";
+ const path="memorial/kingdomlegend-"+Date.now()+"."+ext;
+ const {error}=await db.storage.from("clan-assets").upload(path,file,{upsert:true,contentType:file.type});
+ if(error){status.textContent="Upload failed: "+error.message;return;}
+ const {data}=db.storage.from("clan-assets").getPublicUrl(path);
+ display.innerHTML='<img class="memorial-preview" src="'+esc(data.publicUrl)+'" alt="KingdomLegend memorial obituary">';
+ status.textContent="Memorial image uploaded successfully.";
+});
+
 loadHome();
 </script></body></html>
