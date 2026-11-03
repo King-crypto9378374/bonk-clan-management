@@ -1,83 +1,46 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BCMS | Bonk Clan Management System</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BCMS | Bonk.io Clan Management System</title><link rel="stylesheet" href="style.css">
+<style>
+.notice-list{display:grid;gap:14px;margin-top:25px}.notice-item,.council-item{background:#101c30;border:1px solid #233651;border-radius:10px;padding:22px}.notice-item p,.council-item p{color:#91a1ba;line-height:1.6;margin-top:8px}.community-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px}.pill{display:inline-block;padding:5px 9px;border-radius:20px;background:#142e50;color:#8fc2ff;font-size:11px;margin-bottom:10px}
+@media(max-width:650px){.navbar{gap:14px}.nav-actions{width:100%;justify-content:flex-start}.hero h1{letter-spacing:-1.5px}}
+</style></head>
 <body>
-
-  <header class="navbar">
-    <div class="logo">BCMS<span>.</span></div>
-    <nav>
-      <a href="#home">Home</a>
-      <a href="#clans">Clans</a>
-      <a href="#council">Council</a>
-      <a href="#announcements">News</a>
-    </nav>
-    <div class="nav-actions">
-      <a href="#" class="login">Log In</a>
-      <a href="#" class="button">Register Clan</a>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero" id="home">
-      <p class="eyebrow">THE BONK.IO COMMUNITY</p>
-      <h1>ONE COMMUNITY.<br><span>COUNTLESS CLANS.</span></h1>
-      <p class="hero-text">
-        The central hub for Bonk.io clans. Build your reputation,
-        recruit members, form alliances, and compete.
-      </p>
-      <div class="hero-actions">
-        <a href="#clans" class="button">Explore Clans</a>
-        <a href="#council" class="button secondary">Organization Council</a>
-      </div>
-    </section>
-
-    <section class="stats">
-      <div><strong>0</strong><span>Registered Clans</span></div>
-      <div><strong>0</strong><span>Community Members</span></div>
-      <div><strong>0</strong><span>Active Alliances</span></div>
-      <div><strong>0</strong><span>Recorded Wars</span></div>
-    </section>
-
-    <section class="content-section" id="clans">
-      <p class="eyebrow">COMMUNITY DIRECTORY</p>
-      <h2>Explore the Clans</h2>
-      <p>Discover registered clans and find your place in the community.</p>
-      <div class="empty-card">
-        <h3>No clans registered yet</h3>
-        <p>Approved clan applications will appear here.</p>
-      </div>
-    </section>
-
-    <section class="content-section" id="council">
-      <p class="eyebrow">COMMUNITY GOVERNANCE</p>
-      <h2>The Clan Council</h2>
-      <p>
-        A community-led council where eligible clan representatives
-        discuss proposals and vote on important decisions.
-      </p>
-    </section>
-
-    <section class="content-section" id="announcements">
-      <p class="eyebrow">LATEST UPDATES</p>
-      <h2>Announcements</h2>
-      <div class="empty-card">
-        <p>No announcements have been published yet.</p>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="logo">BCMS<span>.</span></div>
-    <p>Bonk.io Clan Management System</p>
-    <p>Built for the community.</p>
-  </footer>
-
-  <script src="script.js"></script>
-</body>
-</html>
+<header class="navbar"><a class="logo" href="index.html">BCMS<span>.</span></a>
+<nav><a href="#clans">Clans</a><a href="#council">Council</a><a href="#announcements">News</a></nav>
+<div class="nav-actions"><a id="accountLink" class="login" href="auth.html">Log In</a><a class="button" href="apply.html">Register Clan</a></div></header>
+<main>
+<section class="hero" id="home"><p class="eyebrow">THE BONK.IO COMMUNITY</p><h1>ONE COMMUNITY.<br><span>COUNTLESS CLANS.</span></h1>
+<p class="hero-text">The central hub for Bonk.io clans. Discover communities, register your clan, connect with leaders, and help shape the future of the scene.</p>
+<div class="hero-actions"><a href="clans.html" class="button">Explore Clans</a><a href="apply.html" class="button secondary">Register Your Clan</a></div>
+<div class="community-actions"><a id="adminLink" class="login" href="admin.html" hidden>Open administration →</a></div></section>
+<section class="stats"><div><strong id="clanCount">—</strong><span>Approved Clans</span></div><div><strong id="memberCount">—</strong><span>Registered Members</span></div><div><strong id="proposalCount">—</strong><span>Council Proposals</span></div><div><strong id="announcementCount">—</strong><span>Announcements</span></div></section>
+<section class="content-section" id="clans"><p class="eyebrow">COMMUNITY DIRECTORY</p><h2>Explore the Clans</h2><p>Discover approved clans and find your place in the community.</p><div class="empty-card" id="featuredClans">Loading approved clans…</div><p style="margin-top:20px"><a class="button" href="clans.html">View Clan Directory</a></p></section>
+<section class="content-section" id="council"><p class="eyebrow">COMMUNITY GOVERNANCE</p><h2>The Clan Council</h2><p>View proposals from the organization and follow community decisions.</p><div class="notice-list" id="proposalList"><div class="empty-card">Loading council proposals…</div></div></section>
+<section class="content-section" id="announcements"><p class="eyebrow">LATEST UPDATES</p><h2>Announcements</h2><div class="notice-list" id="newsList"><div class="empty-card">Loading announcements…</div></div></section>
+</main><footer><div class="logo">BCMS<span>.</span></div><p>Bonk.io Clan Management System</p><p>Independent community platform; not affiliated with Bonk.io.</p></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase.js"></script><script>
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+async function loadHome(){
+ const [clans,members,proposals,news,session]=await Promise.all([
+ db.from("clans").select("id,name,tag,description,colors,recruitment_status").eq("status","approved").order("created_at",{ascending:false}).limit(3),
+ db.from("profiles").select("id",{count:"exact",head:true}),
+ db.from("council_proposals").select("id",{count:"exact",head:true}),
+ db.from("announcements").select("id",{count:"exact",head:true}),
+ db.auth.getSession()
+ ]);
+ document.getElementById("clanCount").textContent=clans.error?"—":clans.data.length;
+ document.getElementById("memberCount").textContent=members.error?"—":(members.count??0);
+ document.getElementById("proposalCount").textContent=proposals.error?"—":(proposals.count??0);
+ document.getElementById("announcementCount").textContent=news.error?"—":(news.count??0);
+ document.getElementById("featuredClans").innerHTML=clans.error?'<p>Clan directory is temporarily unavailable.</p>':clans.data.length?clans.data.map(c=>'<div class="council-item"><span class="pill">'+esc(c.recruitment_status||"Community")+'</span><h3>'+esc(c.name)+' <span style="color:#2583ff">['+esc(c.tag)+']</span></h3><p>'+esc(c.description||"No description provided.")+'</p></div>').join(""):'<p>No approved clans yet. Be the first to apply.</p>';
+ const [p,n]=await Promise.all([db.from("council_proposals").select("id,title,description,status,created_at").order("created_at",{ascending:false}).limit(4),db.from("announcements").select("id,title,content,created_at").order("created_at",{ascending:false}).limit(4)]);
+ document.getElementById("proposalList").innerHTML=p.error?'<div class="empty-card">Council updates unavailable.</div>':p.data.length?p.data.map(x=>'<article class="council-item"><span class="pill">'+esc(x.status)+'</span><h3>'+esc(x.title)+'</h3><p>'+esc(x.description)+'</p></article>').join(""):'<div class="empty-card">No proposals have been published.</div>';
+ document.getElementById("newsList").innerHTML=n.error?'<div class="empty-card">Announcements unavailable.</div>':n.data.length?n.data.map(x=>'<article class="notice-item"><h3>'+esc(x.title)+'</h3><p>'+esc(x.content)+'</p></article>').join(""):'<div class="empty-card">No announcements yet.</div>';
+ if(session.data.session){document.getElementById("accountLink").textContent="My Account / Log Out";document.getElementById("accountLink").href="auth.html";const {data:staff}=await db.from("organization_staff").select("role").eq("user_id",session.data.session.user.id).maybeSingle();if(staff)document.getElementById("adminLink").hidden=false;}
+}
+loadHome();
+</script></body></html>
